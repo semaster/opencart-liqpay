@@ -66,12 +66,13 @@
               <input type="text" name="liqpay_total" value="<?php echo $liqpay_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
             </div>
           </div>
+
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
+            <label class="col-sm-2 control-label" for="input-success-status"><?php echo $entry_success; ?></label>
             <div class="col-sm-10">
-              <select name="liqpay_order_status_id" id="input-order-status" class="form-control">
+              <select name="liqpay_success_status_id" id="input-success-status" class="form-control">
                 <?php foreach ($order_statuses as $order_status) { ?>
-                <?php if ($order_status['order_status_id'] == $liqpay_order_status_id) { ?>
+                <?php if ($order_status['order_status_id'] == $liqpay_success_status_id) { ?>
                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                 <?php } else { ?>
                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -80,6 +81,22 @@
               </select>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-failure-status"><?php echo $entry_failure; ?></label>
+            <div class="col-sm-10">
+              <select name="liqpay_failure_status_id" id="input-failure-status" class="form-control">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <?php if ($order_status['order_status_id'] == $liqpay_failure_status_id) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                <?php } else { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+                <?php } ?>
+              </select>
+            </div>
+          </div>   
+
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
             <div class="col-sm-10">

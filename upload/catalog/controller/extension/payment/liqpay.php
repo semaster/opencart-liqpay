@@ -1,11 +1,11 @@
 <?php
 class ControllerExtensionPaymentLiqPay extends Controller {
-	public function index() {
-		$data['button_confirm'] = $this->language->get('button_confirm');
+    public function index() {
+        $data['button_confirm'] = $this->language->get('button_confirm');
 
-		$order_id = $this->session->data['order_id'];
-		$this->load->model('checkout/order');
-		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_id = $this->session->data['order_id'];
+        $this->load->model('checkout/order');
+        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
         $result_url  = $this->url->link('checkout/success', '', true);
         $server_url  = $this->url->link('extension/payment/liqpay/callback', '', true);
@@ -26,25 +26,25 @@ class ControllerExtensionPaymentLiqPay extends Controller {
             'sandbox'        => $sandbox
         ));
 
+        return  $html;
+    }
+
+    public function callback() {
+
+        $private_key = $this->config->get('liqpay_signature'); 
+
+        $data        = $this->request->post['data'];
+        $signature   = $this->request->post['signature'];
+
+        $sign_check  = base64_encode(sha1($private_key . $data . $private_key, 1));
+        $parsed_data = json_decode(base64_decode($data), true);
+
+        $status = ($parsed_data['status'] == 'success') ? $this->config->get('liqpay_success_status_id') : $this->config->get('liqpay_failure_status_id');
+
+        if ($sign_check == $signature) {
+            $this->load->model('checkout/order');
+            $this->model_checkout_order->addOrderHistory($parsed_data['order_id'], $status);           
+        }
         
-
-		return  $html;
-	}
-
-	public function callback() {
-
-		$private_key = $this->config->get('liqpay_signature'); 
-
-	    $data        = $this->request->post['data'];
-	    $signature   = $this->request->post['signature'];
-
-	    $sign_check  = base64_encode(sha1($private_key . $data . $private_key, 1));
-	    $parsed_data = json_decode(base64_decode($data), true);
-
-		if ($sign_check == $signature) {
-		    $this->load->model('checkout/order');
-		    $this->model_checkout_order->addOrderHistory($parsed_data['order_id'], $this->config->get('config_order_status_id'));			
-		}
-	    
-	}
+    }
 }
